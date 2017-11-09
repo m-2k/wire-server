@@ -26,16 +26,16 @@
 # This version builds the service from scratch
 version: '3'
 services:
-  # cassandra:
-  #   hostname: cassandra
-  #   image: cassandra:3.11.0
-  #   command: /bin/bash -c "sleep 1 && echo ' -- Pausing to let system catch up ... -->' && /docker-entrypoint.sh cassandra -f"
-  #   ports:
-  #     - 7000:7000
-  #     - 7001:7001
-  #     - 7199:7199
-  #     - 9042:9042
-  #     - 9160:9160
+  cassandra:
+    hostname: cassandra
+    image: cassandra:3.11.0
+    command: /bin/bash -c "sleep 1 && echo ' -- Pausing to let system catch up ... -->' && /docker-entrypoint.sh cassandra -f"
+    ports:
+      - 7000:7000
+      - 7001:7001
+      - 7199:7199
+      - 9042:9042
+      - 9160:9160
   # gundeck-redis:
   #   image: "redis:alpine"
   gundeck:
@@ -49,3 +49,12 @@ services:
       - 8001:8001
     volumes:
       - ./services/gundeck:/config
+
+  gundeck-schema:
+    env_file: services/.env
+    build:
+      context: build/alpine
+      args:
+        service: gundeck
+        executable: gundeck-schema
+    entrypoint: 'sh -c "while true; do gundeck-schema --host cassandra --keyspace gundeck_test --replication-factor 1; sleep 5; done"'
