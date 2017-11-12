@@ -26,10 +26,13 @@ aws:
   internalQueue: integration-brig-events-internal
   blacklistTable: integration-brig-userkey-blacklist
   prekeyTable: integration-brig-prekeys
+  # TODO: Check AWS loadCredentialsFromEnv
+  awsKeyId: <insert-key-id-here>
+  awsSecretKey: <insert-secret-key-here>
 
 emailSMS:
   general:
-    templateDir: deb/opt/brig/templates
+    templateDir: /usr/share/wire/templates/
     emailSender: backend-integration@wire.com
     smsSender: "<insert-sender-number-here>"
 
